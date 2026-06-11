@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIV Season 5 · 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg-void: #080b10;
+    --bg-panel: #0d1117;
+    --bg-card: #131920;
+    --bg-elevated: #1a2330;
+    --border: #1e2d3d;
+    --border-bright: #2a3f55;
+    --gold: #f0b429;
+    --gold-dim: #8a6516;
+    --cyan: #00d4ff;
+    --cyan-dim: #0a4a5e;
+    --green: #00e676;
+    --green-dim: #0a3d1f;
+    --red: #ff4757;
+    --text-primary: #e8edf2;
+    --text-secondary: #7a8fa8;
+    --text-muted: #3d5068;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    position: relative;
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(240,180,41,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 4px; }
+  .league-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .league-title {
+    font-family: var(--font-display);
+    font-size: 52px;
+    letter-spacing: 2px;
+    line-height: 1;
+    background: linear-gradient(90deg, #fff 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .league-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+  }
+  .header-right { text-align: right; }
+  .season-badge {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 6px 20px;
+    letter-spacing: 2px;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-top: 8px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+  }
+  .live-dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* NAV TABS */
+  .nav {
+    display: flex;
+    gap: 2px;
+    padding: 16px 48px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    color: var(--text-muted);
+    background: transparent;
+    transition: all 0.2s;
+    position: relative;
+    top: 1px;
+  }
+  .nav-tab:hover { color: var(--text-secondary); }
+  .nav-tab.active {
+    color: var(--gold);
+    border-color: var(--border);
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--bg-panel);
+  }
+
+  /* MAIN LAYOUT */
+  .main { padding: 32px 48px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+  }
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+  .card-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* GRID LAYOUTS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-full { width: 100%; margin-bottom: 20px; }
+
+  /* STAT STRIP */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+  }
+  .stat-cell {
+    background: var(--bg-card);
+    padding: 20px 24px;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: 1px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  /* LEADERBOARD TABLE */
+  .lb-table { width: 100%; border-collapse: collapse; }
+  .lb-table thead tr {
+    border-bottom: 1px solid var(--border-bright);
+  }
+  .lb-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 400;
+  }
+  .lb-table th:first-child { width: 48px; text-align: center; }
+  .lb-table th.num { text-align: right; }
+  .lb-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .lb-table td:first-child { text-align: center; }
+  .lb-table td.num { text-align: right; font-family: var(--font-mono); font-size: 14px; }
+  .lb-table tr:last-child td { border-bottom: none; }
+  .lb-table tbody tr {
+    transition: background 0.15s;
+    cursor: default;
+  }
+  .lb-table tbody tr:hover { background: var(--bg-elevated); }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .rank-1 { color: var(--gold); border: 1px solid var(--gold-dim); }
+  .rank-2 { color: #c0c8d2; border: 1px solid #3a4a5a; }
+  .rank-3 { color: #cd7f32; border: 1px solid #4a3520; }
+  .rank-other { color: var(--text-muted); }
+
+  .manager-name { font-weight: 600; font-size: 14px; }
+  .score-val { color: var(--cyan); }
+  .score-zero { color: var(--text-muted); }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    margin-top: 6px;
+    width: 100%;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
+    transition: width 0.8s ease;
+  }
+
+  /* CHART CONTAINERS */
+  .chart-wrap { position: relative; }
+  .chart-wrap canvas { display: block; }
+
+  /* WORLD CUP SECTION */
+  .wc-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .team-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--manager-color, var(--border-bright));
+    transition: height 0.2s;
+  }
+  .team-card:hover {
+    border-color: var(--border-bright);
+    background: var(--bg-elevated);
+    transform: translateY(-1px);
+  }
+  .team-card.selected {
+    border-color: var(--gold-dim);
+    background: var(--bg-elevated);
+  }
+  .team-card.selected::before { height: 3px; background: var(--gold); }
+  .team-flag { font-size: 22px; margin-bottom: 6px; }
+  .team-country {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .team-manager {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .team-pts {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .team-stats-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .team-stat-mini {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+  .team-stat-mini span { color: var(--text-secondary); }
+
+  /* EDIT OVERLAY */
+  .edit-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .edit-modal-overlay.open { display: flex; }
+  .edit-modal {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-bright);
+    padding: 32px;
+    min-width: 420px;
+    max-width: 520px;
+    width: 90vw;
+  }
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .modal-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .form-input {
+    background: var(--bg-card);
+    border: 1px solid var(--border-bright);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: 10px 12px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input::-webkit-inner-spin-button { opacity: 0; }
+  .modal-btns { display: flex; gap: 12px; margin-top: 24px; }
+  .btn {
+    padding: 10px 24px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: #000;
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: #ffc843; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-bright);
+  }
+  .btn-ghost:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+
+  /* MANAGER COLOR LEGEND */
+  .legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .legend-item:hover { color: var(--text-primary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* WC STAGE TRACKER */
+  .stage-tracker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+  }
+  .stage-cell {
+    background: var(--bg-card);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .stage-cell:hover { background: var(--bg-elevated); }
+  .stage-cell.active { background: var(--bg-elevated); }
+  .stage-cell.active .stage-label { color: var(--gold); }
+  .stage-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .stage-pts {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--text-secondary);
+  }
+
+  /* CHART TOOLTIP OVERRIDE — done via Chart.js config */
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .wc-grid { grid-template-columns: repeat(4, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .header { padding: 20px 20px 16px; flex-direction: column; gap: 12px; }
+    .main { padding: 20px; }
+    .nav { padding: 12px 20px 0; overflow-x: auto; }
+    .stat-strip { grid-template-columns: 1fr 1fr; }
+    .wc-grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .league-title { font-size: 36px; }
+  }
+
+  /* Sparkline */
+  .sparkline-wrap { height: 32px; }
+
+  /* Tooltip custom */
+  .custom-tooltip {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-bright);
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    pointer-events: none;
+  }
+
+  /* WC highlight bar */
+  .wc-total-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 20px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-bright);
+    margin-bottom: 20px;
+  }
+  .wc-leader-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .wc-leader-name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: var(--gold);
+  }
+  .wc-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  /* Points scoring guide */
+  .scoring-guide {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+  }
+  .sg-cell {
+    background: var(--bg-card);
+    padding: 14px 16px;
+  }
+  .sg-event {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .sg-pts {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--cyan);
+  }
+
+  /* DRAFT ORDER WIDGET */
+  .draft-widget {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .draft-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .draft-pick {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 6px 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-void);
+    position: relative;
+    transition: all 0.2s;
+  }
+  .draft-pick:hover { border-color: var(--border-bright); background: var(--bg-elevated); }
+  .draft-pick::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--pick-color, var(--border));
+  }
+  .draft-pick-num {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--text-muted);
+    line-height: 1;
+  }
+  .draft-pick-num.pick-1 { color: var(--gold); font-size: 26px; }
+  .draft-pick-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+  }
+  .draft-pick-score {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+  @media (max-width: 900px) {
+    .draft-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+  @media (max-width: 500px) {
+    .draft-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* SCORING TABLE */
+  .scoring-table-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-top: 24px;
+  }
+  .scoring-full-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 14px;
+  }
+  .sf-cell {
+    background: var(--bg-elevated);
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .sf-event { font-size: 13px; color: var(--text-secondary); }
+  .sf-pts {
+    font-family: var(--font-display);
+    font-size: 22px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+  .sf-pos { color: var(--green); }
+  .sf-neg { color: var(--red); }
+  .sf-neu { color: var(--cyan); }
+  @media (max-width: 768px) {
+    .scoring-full-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--gold-dim);
+    padding: 14px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--gold);
+    z-index: 9999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <span class="league-eyebrow">Fantasy League</span>
+    <h1 class="league-title">LIV SEASON 5</h1>
+    <p class="league-subtitle">12 Managers · NCAA Bracket + World Cup 2026</p>
+  </div>
+  <div class="header-right">
+    <div class="season-badge">2026</div>
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span>LIVE STANDINGS</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-tab active" onclick="switchTab('overview')">Overview</button>
+  <button class="nav-tab" onclick="switchTab('ncaa')">NCAA Bracket</button>
+  <button class="nav-tab" onclick="switchTab('worldcup')">World Cup</button>
+</nav>
+
+<!-- OVERVIEW VIEW -->
+<div class="main">
+<div id="view-overview" class="view active">
+
+  <!-- DRAFT ORDER WIDGET -->
+  <div class="draft-widget">
+    <div class="card-label">2026 Draft Order — Best record picks first · Worst record picks last</div>
+    <div class="draft-grid" id="draft-order-grid"></div>
+  </div>
+
+  <!-- MAIN TOTAL SCORE CHART -->
+  <div class="grid-full card" style="margin-bottom:20px;">
+    <div class="card-label">Total Score — All Managers · Season 5</div>
+    <div class="chart-wrap" style="height:320px;">
+      <canvas id="chart-total"></canvas>
+    </div>
+  </div>
+
+  <!-- WC OVERVIEW CHART -->
+  <div class="grid-full card" style="margin-bottom:20px;">
+    <div class="card-label">World Cup · Manager Points (Live)</div>
+    <div class="chart-wrap" style="height:260px;">
+      <canvas id="chart-wc-overview"></canvas>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="card">
+    <div class="card-label">Full Standings</div>
+    <table class="lb-table" id="lb-overview">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Manager</th>
+          <th class="num">Total</th>
+          <th class="num">NCAA</th>
+          <th class="num">World Cup</th>
+          <th>Breakdown</th>
+        </tr>
+      </thead>
+      <tbody id="lb-overview-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- NCAA VIEW -->
+<div id="view-ncaa" class="view">
+  <div class="section-header">
+    <span class="section-title">NCAA Bracket Challenge</span>
+    <span class="section-tag">Season 5 Final Results</span>
+  </div>
+
+  <!-- NCAA Chart tall -->
+  <div class="grid-full card" style="margin-bottom:20px;">
+    <div class="card-label">Final Bracket Scores — Ranked</div>
+    <div class="chart-wrap" style="height:350px;">
+      <canvas id="chart-ncaa-main"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-label">Score Distribution</div>
+      <div class="chart-wrap" style="height:240px;">
+        <canvas id="chart-ncaa-polar"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">NCAA Leaderboard</div>
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Manager</th><th class="num">Score</th><th>Bar</th>
+          </tr>
+        </thead>
+        <tbody id="ncaa-lb-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- WORLD CUP VIEW -->
+<div id="view-worldcup" class="view">
+  <div class="section-header">
+    <span class="section-title">World Cup 2026</span>
+    <span class="section-tag">Live Score Tracker</span>
+  </div>
+
+  <!-- Scoring Guide -->
+  <div class="scoring-guide">
+    <div class="sg-cell"><div class="sg-event">Win in Group</div><div class="sg-pts">+100</div></div>
+    <div class="sg-cell"><div class="sg-event">Loss in Group</div><div class="sg-pts" style="color:var(--red)">−100</div></div>
+    <div class="sg-cell"><div class="sg-event">Draw in Group</div><div class="sg-pts">+50</div></div>
+    <div class="sg-cell"><div class="sg-event">Win World Cup</div><div class="sg-pts">+500</div></div>
+  </div>
+
+  <div class="wc-note" style="margin-bottom:16px;">Click any country card to update its stats → scores auto-calculate</div>
+
+  <!-- Manager Legend -->
+  <div class="legend-row" id="wc-legend"></div>
+
+  <!-- Country Cards Grid -->
+  <div class="wc-grid" id="wc-cards"></div>
+
+  <!-- WC Charts -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-label">Manager World Cup Points (Combined)</div>
+      <div class="chart-wrap" style="height:300px;">
+        <canvas id="chart-wc-bar"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Country Points Breakdown — Radar</div>
+      <div class="chart-wrap" style="height:300px;">
+        <canvas id="chart-wc-radar"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail table -->
+  <div class="card">
+    <div class="card-label">Full Country Stats</div>
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Country</th>
+          <th>Manager</th>
+          <th class="num">Pts</th>
+          <th class="num">W</th>
+          <th class="num">D</th>
+          <th class="num">L</th>
+          <th class="num">GD</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody id="wc-detail-body"></tbody>
+    </table>
+  </div>
+
+  <!-- SCORING FORMAT TABLE -->
+  <div class="scoring-table-section">
+    <div class="card-label">Full Scoring Format — World Cup 2026</div>
+    <div class="scoring-full-grid">
+      <div class="sf-cell"><span class="sf-event">Win in Group Stage</span><span class="sf-pts sf-pos">+100</span></div>
+      <div class="sf-cell"><span class="sf-event">Draw in Group Stage</span><span class="sf-pts sf-pos">+50</span></div>
+      <div class="sf-cell"><span class="sf-event">Loss in Group Stage</span><span class="sf-pts sf-neg">−100</span></div>
+      <div class="sf-cell"><span class="sf-event">Finish 1st in Group</span><span class="sf-pts sf-pos">+200</span></div>
+      <div class="sf-cell"><span class="sf-event">Finish 2nd in Group</span><span class="sf-pts sf-pos">+100</span></div>
+      <div class="sf-cell"><span class="sf-event">Finish 3rd in Group</span><span class="sf-pts sf-pos">+50</span></div>
+      <div class="sf-cell"><span class="sf-event">Finish 4th in Group</span><span class="sf-pts sf-neu">0</span></div>
+      <div class="sf-cell"><span class="sf-event">Goal Differential (±50 per)</span><span class="sf-pts sf-pos">±50</span></div>
+      <div class="sf-cell"><span class="sf-event">Win in Penalty Shootout</span><span class="sf-pts sf-pos">+50</span></div>
+      <div class="sf-cell"><span class="sf-event">Loss in Penalty Shootout</span><span class="sf-pts sf-neg">−50</span></div>
+      <div class="sf-cell"><span class="sf-event">Reach Round of 16</span><span class="sf-pts sf-pos">+150</span></div>
+      <div class="sf-cell"><span class="sf-event">Reach Quarterfinals</span><span class="sf-pts sf-pos">+200</span></div>
+      <div class="sf-cell"><span class="sf-event">Reach Semifinals</span><span class="sf-pts sf-pos">+300</span></div>
+      <div class="sf-cell"><span class="sf-event">Reach the Final</span><span class="sf-pts sf-pos">+400</span></div>
+      <div class="sf-cell"><span class="sf-event">Win the World Cup</span><span class="sf-pts sf-pos">+500</span></div>
+    </div>
+  </div>
+
+</div>
+</div><!-- end main -->
+
+<!-- EDIT MODAL -->
+<div class="edit-modal-overlay" id="edit-modal">
+  <div class="edit-modal">
+    <div class="modal-title" id="modal-title">Update Country</div>
+    <div class="modal-sub" id="modal-sub">WORLD CUP · LIVE UPDATE</div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label class="form-label">Wins</label>
+        <input class="form-input" type="number" id="inp-wins" min="0" value="0">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Draws</label>
+        <input class="form-input" type="number" id="inp-draws" min="0" value="0">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Losses</label>
+        <input class="form-input" type="number" id="inp-losses" min="0" value="0">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Goal Diff</label>
+        <input class="form-input" type="number" id="inp-gd" value="0">
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-primary" onclick="saveEdit()">Save Results</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================
+// DATA
+// ============================
+const MANAGER_COLORS = {
+  Charles: '#f0b429',
+  Dave:    '#00d4ff',
+  Adam:    '#00e676',
+  Ryan:    '#ff6b6b',
+  Mitchum: '#a78bfa',
+  Shaq:    '#fb923c',
+  Drew:    '#34d399',
+  Fronge:  '#f472b6',
+  Brent:   '#60a5fa',
+  Matt:    '#fbbf24',
+  Jake:    '#818cf8',
+  Wes:     '#94a3b8',
+};
+
+const NCAA = [
+  { manager: 'Charles', score: 1110 },
+  { manager: 'Dave',    score: 1030 },
+  { manager: 'Adam',    score: 870  },
+  { manager: 'Ryan',    score: 820  },
+  { manager: 'Mitchum', score: 760  },
+  { manager: 'Shaq',    score: 650  },
+  { manager: 'Drew',    score: 620  },
+  { manager: 'Fronge',  score: 570  },
+  { manager: 'Brent',   score: 540  },
+  { manager: 'Matt',    score: 460  },
+  { manager: 'Jake',    score: 430  },
+  { manager: 'Wes',     score: 0    },
+];
+
+const FLAGS = {
+  'Spain': '🇪🇸', 'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Morocco': '🇲🇦', 'USA': '🇺🇸',
+  'France': '🇫🇷', 'Ivory Coast': '🇨🇮', 'Argentina': '🇦🇷', 'Paraguay': '🇵🇾',
+  'Portugal': '🇵🇹', 'Senegal': '🇸🇳', 'Brazil': '🇧🇷', 'Croatia': '🇭🇷',
+  'Germany': '🇩🇪', 'Sweden': '🇸🇪', 'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Canada': '🇨🇦',
+  'Norway': '🇳🇴', 'Turkey': '🇹🇷', 'Netherlands': '🇳🇱', 'Switzerland': '🇨🇭',
+  'Belgium': '🇧🇪', 'Japan': '🇯🇵', 'Colombia': '🇨🇴', 'Mexico': '🇲🇽',
+};
+
+let WC_DATA = [
+  { manager: 'Charles', country: 'Spain',       wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Charles', country: 'Scotland',    wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Fronge',  country: 'Morocco',     wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Fronge',  country: 'USA',         wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Shaq',    country: 'France',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Shaq',    country: 'Ivory Coast', wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Dave',    country: 'Argentina',   wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Dave',    country: 'Paraguay',    wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Jake',    country: 'Portugal',    wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Jake',    country: 'Senegal',     wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Brent',   country: 'Brazil',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Brent',   country: 'Croatia',     wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Mitchum', country: 'Germany',     wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Mitchum', country: 'Sweden',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Adam',    country: 'England',     wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Adam',    country: 'Canada',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Ryan',    country: 'Norway',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Ryan',    country: 'Turkey',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Wes',     country: 'Netherlands', wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Wes',     country: 'Switzerland', wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Matt',    country: 'Belgium',     wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Matt',    country: 'Japan',       wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Drew',    country: 'Colombia',    wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Drew',    country: 'Mexico',      wins:0, draws:0, losses:0, gd:0 },
+];
+
+function countryPoints(c) {
+  return c.wins * 3 + c.draws * 1 + Math.max(0, c.gd);
+}
+
+function managerWCPoints(manager) {
+  return WC_DATA.filter(c => c.manager === manager).reduce((s,c) => s + countryPoints(c), 0);
+}
+
+function totalScore(manager) {
+  const ncaa = NCAA.find(n => n.manager === manager)?.score || 0;
+  return ncaa + managerWCPoints(manager);
+}
+
+// ============================
+// CHART.JS DEFAULTS
+// ============================
+Chart.defaults.color = '#7a8fa8';
+Chart.defaults.borderColor = '#1e2d3d';
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+const chartInstances = {};
+
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+function makeGradient(ctx, color, alpha1=0.6, alpha2=0.0) {
+  const grad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.offsetHeight || 300);
+  grad.addColorStop(0, color.replace(')', `,${alpha1})`).replace('rgb','rgba').replace('0x','rgba'));
+  grad.addColorStop(1, color.replace(')', `,${alpha2})`).replace('rgb','rgba').replace('0x','rgba'));
+  return grad;
+}
+
+// ============================
+// RENDER OVERVIEW
+// ============================
+function renderOverview() {
+  const managers = NCAA.map(n => n.manager);
+  const totals = managers.map(m => totalScore(m)).sort((a,b) => b-a);
+  const sortedManagers = [...managers].sort((a,b) => totalScore(b) - totalScore(a));
+
+  // Draft Order — best record picks first (pick 1), worst picks last (pick 12)
+  const draftOrder = [...sortedManagers]; // index 0 = pick 1 (best), index 11 = pick 12 (worst)
+  const draftGrid = document.getElementById('draft-order-grid');
+  if (draftGrid) {
+    draftGrid.innerHTML = '';
+    draftOrder.forEach((m, i) => {
+      const pickNum = i + 1;
+      const score = totalScore(m);
+      draftGrid.innerHTML += `
+        <div class="draft-pick" style="--pick-color:${MANAGER_COLORS[m]}">
+          <div class="draft-pick-num ${pickNum===1?'pick-1':''}">${pickNum}</div>
+          <div class="draft-pick-name" style="color:${MANAGER_COLORS[m]}">${m}</div>
+          <div class="draft-pick-score">${score > 0 ? score.toLocaleString() + ' pts' : '—'}</div>
+        </div>`;
+    });
+  }
+
+  // Total Score chart — horizontal bar
+  destroyChart('total');
+  const ctx = document.getElementById('chart-total').getContext('2d');
+  chartInstances['total'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sortedManagers,
+      datasets: [{
+        label: 'Total Score',
+        data: sortedManagers.map(m => totalScore(m)),
+        backgroundColor: sortedManagers.map(m => MANAGER_COLORS[m] + '99'),
+        borderColor: sortedManagers.map(m => MANAGER_COLORS[m]),
+        borderWidth: 1,
+        borderRadius: 2,
+      }, {
+        label: 'NCAA',
+        data: sortedManagers.map(m => NCAA.find(n=>n.manager===m)?.score || 0),
+        backgroundColor: sortedManagers.map(m => MANAGER_COLORS[m] + '44'),
+        borderColor: 'transparent',
+        borderWidth: 0,
+        borderRadius: 2,
+        stack: 'stack',
+        hidden: true,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2330',
+          borderColor: '#2a3f55',
+          borderWidth: 1,
+          titleFont: { family: "'JetBrains Mono', monospace", size: 12 },
+          bodyFont: { family: "'Inter', sans-serif", size: 13 },
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.x.toLocaleString()} pts`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e2d3d' },
+          ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { size: 13, weight: '600' },
+            color: (ctx) => MANAGER_COLORS[sortedManagers[ctx.index]] || '#7a8fa8'
+          }
+        }
+      }
+    }
+  });
+
+  // WC overview bar
+  destroyChart('wc-overview');
+  const ctx2 = document.getElementById('chart-wc-overview').getContext('2d');
+  const wcManagers = Object.keys(MANAGER_COLORS);
+  const wcSorted = [...wcManagers].sort((a,b)=>managerWCPoints(b)-managerWCPoints(a));
+  chartInstances['wc-overview'] = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: wcSorted,
+      datasets: [{
+        label: 'WC Points',
+        data: wcSorted.map(m => managerWCPoints(m)),
+        backgroundColor: wcSorted.map(m => MANAGER_COLORS[m] + '88'),
+        borderColor: wcSorted.map(m => MANAGER_COLORS[m]),
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2330', borderColor: '#2a3f55', borderWidth:1,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#1e2d3d' }, beginAtZero: true,
+          ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
+        }
+      }
+    }
+  });
+
+  // Leaderboard
+  const tbody = document.getElementById('lb-overview-body');
+  tbody.innerHTML = '';
+  sortedManagers.forEach((m, i) => {
+    const ncaaPts = NCAA.find(n=>n.manager===m)?.score || 0;
+    const wcPts = managerWCPoints(m);
+    const total = ncaaPts + wcPts;
+    const maxTotal = totalScore(sortedManagers[0]);
+    const pct = maxTotal > 0 ? (total / maxTotal * 100).toFixed(0) : 0;
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+    tbody.innerHTML += `
+      <tr>
+        <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
+        <td><span class="manager-name" style="color:${MANAGER_COLORS[m]}">${m}</span></td>
+        <td class="num score-val">${total.toLocaleString()}</td>
+        <td class="num ${ncaaPts?'':'score-zero'}">${ncaaPts.toLocaleString()}</td>
+        <td class="num ${wcPts?'score-val':'score-zero'}">${wcPts}</td>
+        <td style="min-width:140px">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${MANAGER_COLORS[m]}44;border-right:2px solid ${MANAGER_COLORS[m]}"></div></div>
+        </td>
+      </tr>`;
+  });
+}
+
+// ============================
+// RENDER NCAA
+// ============================
+function renderNCAA() {
+  const sorted = [...NCAA].sort((a,b)=>b.score-a.score);
+
+  destroyChart('ncaa-main');
+  const ctx = document.getElementById('chart-ncaa-main').getContext('2d');
+  chartInstances['ncaa-main'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sorted.map(n=>n.manager),
+      datasets: [{
+        label: 'NCAA Score',
+        data: sorted.map(n=>n.score),
+        backgroundColor: sorted.map(n=>MANAGER_COLORS[n.manager]+'bb'),
+        borderColor: sorted.map(n=>MANAGER_COLORS[n.manager]),
+        borderWidth: 1,
+        borderRadius: 3,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2330', borderColor: '#2a3f55', borderWidth:1,
+          callbacks: { label: c => ` Score: ${c.parsed.y.toLocaleString()} pts` }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 13, weight: '600' },
+          color: ctx2 => MANAGER_COLORS[sorted[ctx2.index]?.manager] || '#7a8fa8' }
+        },
+        y: { grid: { color: '#1e2d3d' }, beginAtZero: true,
+          ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
+        }
+      }
+    }
+  });
+
+  destroyChart('ncaa-polar');
+  const ctx2 = document.getElementById('chart-ncaa-polar').getContext('2d');
+  chartInstances['ncaa-polar'] = new Chart(ctx2, {
+    type: 'polarArea',
+    data: {
+      labels: sorted.filter(n=>n.score>0).map(n=>n.manager),
+      datasets: [{
+        data: sorted.filter(n=>n.score>0).map(n=>n.score),
+        backgroundColor: sorted.filter(n=>n.score>0).map(n=>MANAGER_COLORS[n.manager]+'88'),
+        borderColor: sorted.filter(n=>n.score>0).map(n=>MANAGER_COLORS[n.manager]),
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels: { boxWidth: 10, padding: 8, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#1a2330', borderColor: '#2a3f55', borderWidth:1,
+        }
+      },
+      scales: {
+        r: { grid: { color: '#1e2d3d' }, ticks: { display: false } }
+      }
+    }
+  });
+
+  // NCAA LB
+  const tbody = document.getElementById('ncaa-lb-body');
+  tbody.innerHTML = '';
+  const maxScore = sorted[0]?.score || 1;
+  sorted.forEach((n, i) => {
+    const pct = n.score ? (n.score/maxScore*100).toFixed(0) : 0;
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+    tbody.innerHTML += `
+      <tr>
+        <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
+        <td><span class="manager-name" style="color:${MANAGER_COLORS[n.manager]}">${n.manager}</span></td>
+        <td class="num ${n.score?'score-val':'score-zero'}">${n.score.toLocaleString()}</td>
+        <td style="min-width:100px">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${MANAGER_COLORS[n.manager]}44;border-right:2px solid ${MANAGER_COLORS[n.manager]}"></div></div>
+        </td>
+      </tr>`;
+  });
+}
+
+// ============================
+// RENDER WORLD CUP
+// ============================
+function renderWorldCup() {
+  // Legend
+  const legend = document.getElementById('wc-legend');
+  legend.innerHTML = '';
+  Object.entries(MANAGER_COLORS).forEach(([m, c]) => {
+    legend.innerHTML += `<div class="legend-item" onclick="highlightManager('${m}')">
+      <div class="legend-dot" style="background:${c}"></div>
+      <span>${m}</span>
+    </div>`;
+  });
+
+  // Country cards
+  const grid = document.getElementById('wc-cards');
+  grid.innerHTML = '';
+  WC_DATA.forEach((c, i) => {
+    const pts = countryPoints(c);
+    const flag = FLAGS[c.country] || '🏳️';
+    const color = MANAGER_COLORS[c.manager];
+    grid.innerHTML += `
+      <div class="team-card" id="card-${i}" style="--manager-color:${color}" onclick="openEdit(${i})">
+        <div class="team-flag">${flag}</div>
+        <div class="team-country">${c.country}</div>
+        <div class="team-manager">${c.manager.toUpperCase()}</div>
+        <div class="team-pts">${pts}</div>
+        <div class="team-stats-row">
+          <span class="team-stat-mini">W<span>${c.wins}</span></span>
+          <span class="team-stat-mini">D<span>${c.draws}</span></span>
+          <span class="team-stat-mini">L<span>${c.losses}</span></span>
+          <span class="team-stat-mini">GD<span>${c.gd > 0 ? '+' : ''}${c.gd}</span></span>
+        </div>
+      </div>`;
+  });
+
+  updateWCCharts();
+  updateWCTable();
+}
+
+function updateWCCharts() {
+  // Manager bar
+  destroyChart('wc-bar');
+  const ctx = document.getElementById('chart-wc-bar').getContext('2d');
+  const managers = Object.keys(MANAGER_COLORS);
+  const wcSorted = [...managers].sort((a,b)=>managerWCPoints(b)-managerWCPoints(a));
+  chartInstances['wc-bar'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: wcSorted,
+      datasets: [
+        {
+          label: 'Country 1',
+          data: wcSorted.map(m => {
+            const countries = WC_DATA.filter(c=>c.manager===m);
+            return countries[0] ? countryPoints(countries[0]) : 0;
+          }),
+          backgroundColor: wcSorted.map(m => MANAGER_COLORS[m] + 'cc'),
+          borderColor: wcSorted.map(m => MANAGER_COLORS[m]),
+          borderWidth: 1,
+          borderRadius: 3,
+          stack: 'wc',
+        },
+        {
+          label: 'Country 2',
+          data: wcSorted.map(m => {
+            const countries = WC_DATA.filter(c=>c.manager===m);
+            return countries[1] ? countryPoints(countries[1]) : 0;
+          }),
+          backgroundColor: wcSorted.map(m => MANAGER_COLORS[m] + '55'),
+          borderColor: wcSorted.map(m => MANAGER_COLORS[m] + '88'),
+          borderWidth: 1,
+          borderRadius: 3,
+          stack: 'wc',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, labels: { boxWidth: 10, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#1a2330', borderColor: '#2a3f55', borderWidth:1,
+          callbacks: {
+            title: items => {
+              const m = items[0].label;
+              const c = WC_DATA.filter(d=>d.manager===m);
+              return `${m} — ${c.map(d=>d.country).join(' + ')}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, stacked: true,
+          ticks: { font: { size: 11, weight:'600' },
+            color: ctx2 => MANAGER_COLORS[wcSorted[ctx2.index]] || '#7a8fa8' }
+        },
+        y: { grid: { color: '#1e2d3d' }, stacked: true, beginAtZero: true,
+          ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
+        }
+      }
+    }
+  });
+
+  // Radar — top countries by points
+  destroyChart('wc-radar');
+  const ctx2 = document.getElementById('chart-wc-radar').getContext('2d');
+  const top = [...WC_DATA].sort((a,b)=>countryPoints(b)-countryPoints(a)).slice(0,8);
+  chartInstances['wc-radar'] = new Chart(ctx2, {
+    type: 'radar',
+    data: {
+      labels: top.map(c=>c.country),
+      datasets: [{
+        label: 'Points',
+        data: top.map(c => countryPoints(c)),
+        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+        borderColor: '#00d4ff',
+        borderWidth: 2,
+        pointBackgroundColor: top.map(c => MANAGER_COLORS[c.manager]),
+        pointBorderColor: '#080b10',
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2330', borderColor: '#2a3f55', borderWidth:1,
+          callbacks: {
+            label: ctx3 => {
+              const c = top[ctx3.dataIndex];
+              return ` ${c.country} (${c.manager}): ${ctx3.parsed.r} pts`;
+            }
+          }
+        }
+      },
+      scales: {
+        r: {
+          grid: { color: '#1e2d3d' },
+          angleLines: { color: '#1e2d3d' },
+          pointLabels: { font: { size: 11 }, color: '#7a8fa8' },
+          ticks: { display: false },
+          suggestedMin: 0,
+        }
+      }
+    }
+  });
+}
+
+function updateWCTable() {
+  const sorted = [...WC_DATA].sort((a,b)=>countryPoints(b)-countryPoints(a));
+  const tbody = document.getElementById('wc-detail-body');
+  tbody.innerHTML = '';
+  const maxPts = Math.max(...WC_DATA.map(c=>countryPoints(c)), 1);
+  sorted.forEach((c, i) => {
+    const pts = countryPoints(c);
+    const pct = (pts/maxPts*100).toFixed(0);
+    const flag = FLAGS[c.country] || '🏳️';
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+    tbody.innerHTML += `
+      <tr>
+        <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
+        <td><span style="margin-right:6px">${flag}</span><strong>${c.country}</strong></td>
+        <td><span style="color:${MANAGER_COLORS[c.manager]};font-weight:600">${c.manager}</span></td>
+        <td class="num ${pts?'score-val':'score-zero'}">${pts}</td>
+        <td class="num">${c.wins}</td>
+        <td class="num">${c.draws}</td>
+        <td class="num">${c.losses}</td>
+        <td class="num">${c.gd>0?'+':''}${c.gd}</td>
+        <td style="min-width:100px">
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${MANAGER_COLORS[c.manager]}44;border-right:2px solid ${MANAGER_COLORS[c.manager]}"></div></div>
+        </td>
+      </tr>`;
+  });
+}
+
+// Refresh just the WC cards (not full re-render)
+function refreshCards() {
+  WC_DATA.forEach((c, i) => {
+    const card = document.getElementById(`card-${i}`);
+    if (!card) return;
+    const pts = countryPoints(c);
+    card.querySelector('.team-pts').textContent = pts;
+    const stats = card.querySelectorAll('.team-stat-mini span');
+    stats[0].textContent = c.wins;
+    stats[1].textContent = c.draws;
+    stats[2].textContent = c.losses;
+    stats[3].textContent = (c.gd>0?'+':'') + c.gd;
+  });
+  updateWCCharts();
+  updateWCTable();
+  // Also refresh overview WC overview if visible
+  if (document.getElementById('view-overview').classList.contains('active')) {
+    destroyChart('wc-overview');
+    const ctxR = document.getElementById('chart-wc-overview').getContext('2d');
+    const wcManagers = Object.keys(MANAGER_COLORS);
+    const wcSorted = [...wcManagers].sort((a,b)=>managerWCPoints(b)-managerWCPoints(a));
+    chartInstances['wc-overview'] = new Chart(ctxR, {
+      type: 'bar',
+      data: {
+        labels: wcSorted,
+        datasets: [{
+          label: 'WC Points',
+          data: wcSorted.map(m => managerWCPoints(m)),
+          backgroundColor: wcSorted.map(m => MANAGER_COLORS[m] + '88'),
+          borderColor: wcSorted.map(m => MANAGER_COLORS[m]),
+          borderWidth: 1,
+          borderRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: '#1e2d3d' }, beginAtZero: true }
+        }
+      }
+    });
+  }
+}
+
+// ============================
+// MODAL
+// ============================
+let editingIdx = null;
+function openEdit(i) {
+  editingIdx = i;
+  const c = WC_DATA[i];
+  const flag = FLAGS[c.country] || '🏳️';
+  document.getElementById('modal-title').textContent = `${flag} ${c.country}`;
+  document.getElementById('modal-sub').textContent = `${c.manager.toUpperCase()} · WORLD CUP 2026`;
+  document.getElementById('inp-wins').value = c.wins;
+  document.getElementById('inp-draws').value = c.draws;
+  document.getElementById('inp-losses').value = c.losses;
+  document.getElementById('inp-gd').value = c.gd;
+  document.getElementById('edit-modal').classList.add('open');
+  document.getElementById('inp-wins').focus();
+}
+function closeModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+  editingIdx = null;
+}
+function saveEdit() {
+  if (editingIdx === null) return;
+  WC_DATA[editingIdx].wins = parseInt(document.getElementById('inp-wins').value) || 0;
+  WC_DATA[editingIdx].draws = parseInt(document.getElementById('inp-draws').value) || 0;
+  WC_DATA[editingIdx].losses = parseInt(document.getElementById('inp-losses').value) || 0;
+  WC_DATA[editingIdx].gd = parseInt(document.getElementById('inp-gd').value) || 0;
+  closeModal();
+  refreshCards();
+  showToast(`✓ ${WC_DATA[editingIdx]?.country || 'Country'} updated`);
+}
+document.getElementById('edit-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('edit-modal')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Enter' && editingIdx !== null) saveEdit();
+});
+
+// ============================
+// TOAST
+// ============================
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================
+// TABS
+// ============================
+function switchTab(tab) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`view-${tab}`).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(tab === 'overview' ? 'overview' : tab === 'ncaa' ? 'ncaa' : 'world')) {
+      t.classList.add('active');
+    }
+  });
+  if (tab === 'overview') renderOverview();
+  if (tab === 'ncaa') renderNCAA();
+  if (tab === 'worldcup') renderWorldCup();
+}
+
+// ============================
+// HIGHLIGHT MANAGER
+// ============================
+function highlightManager(manager) {
+  document.querySelectorAll('.team-card').forEach((card, i) => {
+    if (WC_DATA[i].manager === manager) {
+      card.classList.add('selected');
+    } else {
+      card.classList.remove('selected');
+    }
+  });
+}
+
+// ============================
+// INIT
+// ============================
+renderOverview();
+</script>
+</body>
+</html>
