@@ -294,8 +294,6 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     padding: 14px 12px;
-    cursor: pointer;
-    transition: all 0.2s;
     position: relative;
     overflow: hidden;
   }
@@ -305,18 +303,7 @@
     top: 0; left: 0; right: 0;
     height: 2px;
     background: var(--manager-color, var(--border-bright));
-    transition: height 0.2s;
   }
-  .team-card:hover {
-    border-color: var(--border-bright);
-    background: var(--bg-elevated);
-    transform: translateY(-1px);
-  }
-  .team-card.selected {
-    border-color: var(--gold-dim);
-    background: var(--bg-elevated);
-  }
-  .team-card.selected::before { height: 3px; background: var(--gold); }
   .team-flag { font-size: 22px; margin-bottom: 6px; }
   .team-country {
     font-weight: 600;
@@ -352,84 +339,6 @@
   }
   .team-stat-mini span { color: var(--text-secondary); }
 
-  /* EDIT OVERLAY */
-  .edit-modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-  .edit-modal-overlay.open { display: flex; }
-  .edit-modal {
-    background: var(--bg-panel);
-    border: 1px solid var(--border-bright);
-    padding: 32px;
-    min-width: 420px;
-    max-width: 520px;
-    width: 90vw;
-  }
-  .modal-title {
-    font-family: var(--font-display);
-    font-size: 26px;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-  .modal-sub {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    margin-bottom: 24px;
-  }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-field { display: flex; flex-direction: column; gap: 6px; }
-  .form-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-  .form-input {
-    background: var(--bg-card);
-    border: 1px solid var(--border-bright);
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: 14px;
-    padding: 10px 12px;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus { border-color: var(--gold); }
-  .form-input::-webkit-inner-spin-button { opacity: 0; }
-  .modal-btns { display: flex; gap: 12px; margin-top: 24px; }
-  .btn {
-    padding: 10px 24px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-  .btn-primary {
-    background: var(--gold);
-    color: #000;
-    font-weight: 600;
-  }
-  .btn-primary:hover { background: #ffc843; }
-  .btn-ghost {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-bright);
-  }
-  .btn-ghost:hover { border-color: var(--text-secondary); color: var(--text-primary); }
-
   /* MANAGER COLOR LEGEND */
   .legend-row {
     display: flex;
@@ -446,39 +355,8 @@
     cursor: pointer;
     transition: color 0.2s;
   }
-  .legend-item:hover { color: var(--text-primary); }
+  .legend-item { cursor: default; }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-  /* WC STAGE TRACKER */
-  .stage-tracker {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--border);
-    margin-bottom: 24px;
-  }
-  .stage-cell {
-    background: var(--bg-card);
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .stage-cell:hover { background: var(--bg-elevated); }
-  .stage-cell.active { background: var(--bg-elevated); }
-  .stage-cell.active .stage-label { color: var(--gold); }
-  .stage-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .stage-pts {
-    font-family: var(--font-display);
-    font-size: 20px;
-    color: var(--text-secondary);
-  }
 
   /* CHART TOOLTIP OVERRIDE — done via Chart.js config */
 
@@ -664,25 +542,6 @@
     .scoring-full-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* Toast notification */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--gold-dim);
-    padding: 14px 20px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 1px;
-    color: var(--gold);
-    z-index: 9999;
-    transform: translateY(100px);
-    opacity: 0;
-    transition: all 0.3s ease;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-
 </style>
 </head>
 <body>
@@ -807,8 +666,6 @@
     <div class="sg-cell"><div class="sg-event">Win World Cup</div><div class="sg-pts">+500</div></div>
   </div>
 
-  <div class="wc-note" style="margin-bottom:16px;">Click any country card to update its stats → scores auto-calculate</div>
-
   <!-- Manager Legend -->
   <div class="legend-row" id="wc-legend"></div>
 
@@ -877,37 +734,6 @@
 </div>
 </div><!-- end main -->
 
-<!-- EDIT MODAL -->
-<div class="edit-modal-overlay" id="edit-modal">
-  <div class="edit-modal">
-    <div class="modal-title" id="modal-title">Update Country</div>
-    <div class="modal-sub" id="modal-sub">WORLD CUP · LIVE UPDATE</div>
-    <div class="form-grid">
-      <div class="form-field">
-        <label class="form-label">Wins</label>
-        <input class="form-input" type="number" id="inp-wins" min="0" value="0">
-      </div>
-      <div class="form-field">
-        <label class="form-label">Draws</label>
-        <input class="form-input" type="number" id="inp-draws" min="0" value="0">
-      </div>
-      <div class="form-field">
-        <label class="form-label">Losses</label>
-        <input class="form-input" type="number" id="inp-losses" min="0" value="0">
-      </div>
-      <div class="form-field">
-        <label class="form-label">Goal Diff</label>
-        <input class="form-input" type="number" id="inp-gd" value="0">
-      </div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn btn-primary" onclick="saveEdit()">Save Results</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
 // ============================
@@ -1253,7 +1079,7 @@ function renderWorldCup() {
   const legend = document.getElementById('wc-legend');
   legend.innerHTML = '';
   Object.entries(MANAGER_COLORS).forEach(([m, c]) => {
-    legend.innerHTML += `<div class="legend-item" onclick="highlightManager('${m}')">
+    legend.innerHTML += `<div class="legend-item">
       <div class="legend-dot" style="background:${c}"></div>
       <span>${m}</span>
     </div>`;
@@ -1267,7 +1093,7 @@ function renderWorldCup() {
     const flag = FLAGS[c.country] || '🏳️';
     const color = MANAGER_COLORS[c.manager];
     grid.innerHTML += `
-      <div class="team-card" id="card-${i}" style="--manager-color:${color}" onclick="openEdit(${i})">
+      <div class="team-card" id="card-${i}" style="--manager-color:${color}">
         <div class="team-flag">${flag}</div>
         <div class="team-country">${c.country}</div>
         <div class="team-manager">${c.manager.toUpperCase()}</div>
@@ -1424,103 +1250,6 @@ function updateWCTable() {
   });
 }
 
-// Refresh just the WC cards (not full re-render)
-function refreshCards() {
-  WC_DATA.forEach((c, i) => {
-    const card = document.getElementById(`card-${i}`);
-    if (!card) return;
-    const pts = countryPoints(c);
-    card.querySelector('.team-pts').textContent = pts;
-    const stats = card.querySelectorAll('.team-stat-mini span');
-    stats[0].textContent = c.wins;
-    stats[1].textContent = c.draws;
-    stats[2].textContent = c.losses;
-    stats[3].textContent = (c.gd>0?'+':'') + c.gd;
-  });
-  updateWCCharts();
-  updateWCTable();
-  // Also refresh overview WC overview if visible
-  if (document.getElementById('view-overview').classList.contains('active')) {
-    destroyChart('wc-overview');
-    const ctxR = document.getElementById('chart-wc-overview').getContext('2d');
-    const wcManagers = Object.keys(MANAGER_COLORS);
-    const wcSorted = [...wcManagers].sort((a,b)=>managerWCPoints(b)-managerWCPoints(a));
-    chartInstances['wc-overview'] = new Chart(ctxR, {
-      type: 'bar',
-      data: {
-        labels: wcSorted,
-        datasets: [{
-          label: 'WC Points',
-          data: wcSorted.map(m => managerWCPoints(m)),
-          backgroundColor: wcSorted.map(m => MANAGER_COLORS[m] + '88'),
-          borderColor: wcSorted.map(m => MANAGER_COLORS[m]),
-          borderWidth: 1,
-          borderRadius: 3,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false } },
-          y: { grid: { color: '#1e2d3d' }, beginAtZero: true }
-        }
-      }
-    });
-  }
-}
-
-// ============================
-// MODAL
-// ============================
-let editingIdx = null;
-function openEdit(i) {
-  editingIdx = i;
-  const c = WC_DATA[i];
-  const flag = FLAGS[c.country] || '🏳️';
-  document.getElementById('modal-title').textContent = `${flag} ${c.country}`;
-  document.getElementById('modal-sub').textContent = `${c.manager.toUpperCase()} · WORLD CUP 2026`;
-  document.getElementById('inp-wins').value = c.wins;
-  document.getElementById('inp-draws').value = c.draws;
-  document.getElementById('inp-losses').value = c.losses;
-  document.getElementById('inp-gd').value = c.gd;
-  document.getElementById('edit-modal').classList.add('open');
-  document.getElementById('inp-wins').focus();
-}
-function closeModal() {
-  document.getElementById('edit-modal').classList.remove('open');
-  editingIdx = null;
-}
-function saveEdit() {
-  if (editingIdx === null) return;
-  WC_DATA[editingIdx].wins = parseInt(document.getElementById('inp-wins').value) || 0;
-  WC_DATA[editingIdx].draws = parseInt(document.getElementById('inp-draws').value) || 0;
-  WC_DATA[editingIdx].losses = parseInt(document.getElementById('inp-losses').value) || 0;
-  WC_DATA[editingIdx].gd = parseInt(document.getElementById('inp-gd').value) || 0;
-  closeModal();
-  refreshCards();
-  showToast(`✓ ${WC_DATA[editingIdx]?.country || 'Country'} updated`);
-}
-document.getElementById('edit-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('edit-modal')) closeModal();
-});
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-  if (e.key === 'Enter' && editingIdx !== null) saveEdit();
-});
-
-// ============================
-// TOAST
-// ============================
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
 // ============================
 // TABS
 // ============================
@@ -1536,19 +1265,6 @@ function switchTab(tab) {
   if (tab === 'overview') renderOverview();
   if (tab === 'ncaa') renderNCAA();
   if (tab === 'worldcup') renderWorldCup();
-}
-
-// ============================
-// HIGHLIGHT MANAGER
-// ============================
-function highlightManager(manager) {
-  document.querySelectorAll('.team-card').forEach((card, i) => {
-    if (WC_DATA[i].manager === manager) {
-      card.classList.add('selected');
-    } else {
-      card.classList.remove('selected');
-    }
-  });
 }
 
 // ============================
