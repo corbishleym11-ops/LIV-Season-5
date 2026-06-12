@@ -802,11 +802,12 @@ let WC_DATA = [
   { manager: 'Matt',    country: 'Belgium',     wins:0, draws:0, losses:0, gd:0 },
   { manager: 'Matt',    country: 'Japan',       wins:0, draws:0, losses:0, gd:0 },
   { manager: 'Drew',    country: 'Colombia',    wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Drew',    country: 'Mexico',      wins:0, draws:0, losses:0, gd:0 },
+  { manager: 'Drew',    country: 'Mexico',      wins:1, draws:0, losses:0, gd:1 },
 ];
 
 function countryPoints(c) {
-  return c.wins * 3 + c.draws * 1 + Math.max(0, c.gd);
+  // Win=100, Draw=50, Loss=-100, GD=±50 per
+  return (c.wins * 100) + (c.draws * 50) + (c.losses * -100) + (c.gd * 50);
 }
 
 function managerWCPoints(manager) {
