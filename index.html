@@ -779,35 +779,34 @@ const FLAGS = {
 };
 
 let WC_DATA = [
-  { manager: 'Charles', country: 'Spain',       wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Charles', country: 'Scotland',    wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Fronge',  country: 'Morocco',     wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Fronge',  country: 'USA',         wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Shaq',    country: 'France',      wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Shaq',    country: 'Ivory Coast', wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Dave',    country: 'Argentina',   wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Dave',    country: 'Paraguay',    wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Jake',    country: 'Portugal',    wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Jake',    country: 'Senegal',     wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Brent',   country: 'Brazil',      wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Brent',   country: 'Croatia',     wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Mitchum', country: 'Germany',     wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Mitchum', country: 'Sweden',      wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Adam',    country: 'England',     wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Adam',    country: 'Canada',      wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Ryan',    country: 'Norway',      wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Ryan',    country: 'Turkey',      wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Wes',     country: 'Netherlands', wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Wes',     country: 'Switzerland', wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Matt',    country: 'Belgium',     wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Matt',    country: 'Japan',       wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Drew',    country: 'Colombia',    wins:0, draws:0, losses:0, gd:0 },
-  { manager: 'Drew',    country: 'Mexico',      wins:1, draws:0, losses:0, gd:1 },
+  { manager: 'Charles', country: 'Spain',       pts:150,  wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Charles', country: 'Scotland',    pts:0,    wins:1, losses:0, draws:0, gd:1  },
+  { manager: 'Fronge',  country: 'Morocco',     pts:50,   wins:0, losses:0, draws:1, gd:0  },
+  { manager: 'Fronge',  country: 'USA',         pts:250,  wins:1, losses:0, draws:0, gd:3  },
+  { manager: 'Shaq',    country: 'France',      pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Shaq',    country: 'Ivory Coast', pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Dave',    country: 'Argentina',   pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Dave',    country: 'Paraguay',    pts:-250, wins:0, losses:1, draws:0, gd:-3 },
+  { manager: 'Jake',    country: 'Portugal',    pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Jake',    country: 'Senegal',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Brent',   country: 'Brazil',      pts:50,   wins:0, losses:0, draws:1, gd:0  },
+  { manager: 'Brent',   country: 'Croatia',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Mitchum', country: 'Germany',     pts:400,  wins:1, losses:0, draws:0, gd:6  },
+  { manager: 'Mitchum', country: 'Sweden',      pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Adam',    country: 'England',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Adam',    country: 'Canada',      pts:50,   wins:0, losses:0, draws:1, gd:0  },
+  { manager: 'Ryan',    country: 'Norway',      pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Ryan',    country: 'Turkey',      pts:-200, wins:0, losses:1, draws:0, gd:-2 },
+  { manager: 'Wes',     country: 'Netherlands', pts:50,   wins:0, losses:0, draws:1, gd:0  },
+  { manager: 'Wes',     country: 'Switzerland', pts:50,   wins:0, losses:0, draws:1, gd:0  },
+  { manager: 'Matt',    country: 'Belgium',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Matt',    country: 'Japan',       pts:50,   wins:0, losses:0, draws:1, gd:0  },
+  { manager: 'Drew',    country: 'Colombia',    pts:0,    wins:0, losses:0, draws:0, gd:0  },
+  { manager: 'Drew',    country: 'Mexico',      pts:200,  wins:1, losses:0, draws:0, gd:2  },
 ];
 
 function countryPoints(c) {
-  // Win=100, Draw=50, Loss=-100, GD=±50 per
-  return (c.wins * 100) + (c.draws * 50) + (c.losses * -100) + (c.gd * 50);
+  return c.pts || 0;
 }
 
 function managerWCPoints(manager) {
