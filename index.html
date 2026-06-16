@@ -736,38 +736,79 @@
 
 
 <script>
-// ============================
-// DATA
-// ============================
-const MANAGER_COLORS = {
-  Charles: '#f0b429',
-  Dave:    '#00d4ff',
-  Adam:    '#00e676',
-  Ryan:    '#ff6b6b',
-  Mitchum: '#a78bfa',
-  Shaq:    '#fb923c',
-  Drew:    '#34d399',
-  Fronge:  '#f472b6',
-  Brent:   '#60a5fa',
-  Matt:    '#fbbf24',
-  Jake:    '#818cf8',
-  Wes:     '#94a3b8',
+/* ============================================================
+   ███ RAW DATA BLOCK — START ███
+   This entire object is the single source of truth for the
+   dashboard. To update via automation (e.g. Make.com), replace
+   the contents between the START and END markers below with a
+   new valid JSON-compatible JS object in the same shape.
+   ============================================================ */
+const LEAGUE_DATA = {
+  "managerColors": {
+    "Charles": "#f0b429",
+    "Dave":    "#00d4ff",
+    "Adam":    "#00e676",
+    "Ryan":    "#ff6b6b",
+    "Mitchum": "#a78bfa",
+    "Shaq":    "#fb923c",
+    "Drew":    "#34d399",
+    "Fronge":  "#f472b6",
+    "Brent":   "#60a5fa",
+    "Matt":    "#fbbf24",
+    "Jake":    "#818cf8",
+    "Wes":     "#94a3b8"
+  },
+  "ncaa": [
+    { "manager": "Charles", "score": 1110 },
+    { "manager": "Dave",    "score": 1030 },
+    { "manager": "Adam",    "score": 870  },
+    { "manager": "Ryan",    "score": 820  },
+    { "manager": "Mitchum", "score": 760  },
+    { "manager": "Shaq",    "score": 650  },
+    { "manager": "Drew",    "score": 620  },
+    { "manager": "Fronge",  "score": 570  },
+    { "manager": "Brent",   "score": 540  },
+    { "manager": "Matt",    "score": 460  },
+    { "manager": "Jake",    "score": 430  },
+    { "manager": "Wes",     "score": 0    }
+  ],
+  "worldCup": [
+    { "manager": "Charles", "country": "Spain",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Charles", "country": "Scotland",    "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
+    { "manager": "Fronge",  "country": "Morocco",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Fronge",  "country": "USA",         "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
+    { "manager": "Shaq",    "country": "France",      "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Shaq",    "country": "Ivory Coast", "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
+    { "manager": "Dave",    "country": "Argentina",   "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Dave",    "country": "Paraguay",    "pts": -250, "wins": 0, "losses": 1, "draws": 0, "gd": -3 },
+    { "manager": "Jake",    "country": "Portugal",    "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Jake",    "country": "Senegal",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Brent",   "country": "Brazil",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Brent",   "country": "Croatia",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Mitchum", "country": "Germany",     "pts": 400,  "wins": 1, "losses": 0, "draws": 0, "gd": 6  },
+    { "manager": "Mitchum", "country": "Sweden",      "pts": 300,  "wins": 1, "losses": 0, "draws": 0, "gd": 4  },
+    { "manager": "Adam",    "country": "England",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Adam",    "country": "Canada",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Ryan",    "country": "Norway",      "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Ryan",    "country": "Turkey",      "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
+    { "manager": "Wes",     "country": "Netherlands", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Wes",     "country": "Switzerland", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Matt",    "country": "Belgium",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Matt",    "country": "Japan",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
+    { "manager": "Drew",    "country": "Colombia",    "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Drew",    "country": "Mexico",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  }
+  ]
 };
+/* ============================================================
+   ███ RAW DATA BLOCK — END ███
+   ============================================================ */
 
-const NCAA = [
-  { manager: 'Charles', score: 1110 },
-  { manager: 'Dave',    score: 1030 },
-  { manager: 'Adam',    score: 870  },
-  { manager: 'Ryan',    score: 820  },
-  { manager: 'Mitchum', score: 760  },
-  { manager: 'Shaq',    score: 650  },
-  { manager: 'Drew',    score: 620  },
-  { manager: 'Fronge',  score: 570  },
-  { manager: 'Brent',   score: 540  },
-  { manager: 'Matt',    score: 460  },
-  { manager: 'Jake',    score: 430  },
-  { manager: 'Wes',     score: 0    },
-];
+// ============================
+// DATA ACCESSORS (do not edit)
+// ============================
+const MANAGER_COLORS = LEAGUE_DATA.managerColors;
+const NCAA = LEAGUE_DATA.ncaa;
+let WC_DATA = LEAGUE_DATA.worldCup;
 
 const FLAGS = {
   'Spain': '🇪🇸', 'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Morocco': '🇲🇦', 'USA': '🇺🇸',
@@ -778,32 +819,6 @@ const FLAGS = {
   'Belgium': '🇧🇪', 'Japan': '🇯🇵', 'Colombia': '🇨🇴', 'Mexico': '🇲🇽',
 };
 
-let WC_DATA = [
-  { manager: 'Charles', country: 'Spain',       pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Charles', country: 'Scotland',    pts:150,  wins:1, losses:0, draws:0, gd:1  },
-  { manager: 'Fronge',  country: 'Morocco',     pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Fronge',  country: 'USA',         pts:250,  wins:1, losses:0, draws:0, gd:3  },
-  { manager: 'Shaq',    country: 'France',      pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Shaq',    country: 'Ivory Coast', pts:150,  wins:1, losses:0, draws:0, gd:1  },
-  { manager: 'Dave',    country: 'Argentina',   pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Dave',    country: 'Paraguay',    pts:-250, wins:0, losses:1, draws:0, gd:-3 },
-  { manager: 'Jake',    country: 'Portugal',    pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Jake',    country: 'Senegal',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Brent',   country: 'Brazil',      pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Brent',   country: 'Croatia',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Mitchum', country: 'Germany',     pts:400,  wins:1, losses:0, draws:0, gd:6  },
-  { manager: 'Mitchum', country: 'Sweden',      pts:300,  wins:1, losses:0, draws:0, gd:4  },
-  { manager: 'Adam',    country: 'England',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Adam',    country: 'Canada',      pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Ryan',    country: 'Norway',      pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Ryan',    country: 'Turkey',      pts:-200, wins:0, losses:1, draws:0, gd:-2 },
-  { manager: 'Wes',     country: 'Netherlands', pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Wes',     country: 'Switzerland', pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Matt',    country: 'Belgium',     pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Matt',    country: 'Japan',       pts:50,   wins:0, losses:0, draws:1, gd:0  },
-  { manager: 'Drew',    country: 'Colombia',    pts:0,    wins:0, losses:0, draws:0, gd:0  },
-  { manager: 'Drew',    country: 'Mexico',      pts:200,  wins:1, losses:0, draws:0, gd:2  },
-];
 
 function countryPoints(c) {
   return c.pts || 0;
