@@ -447,6 +447,79 @@
     color: var(--cyan);
   }
 
+  /* TODAY'S GAMES WIDGET */
+  .games-widget {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .game-card {
+    background: var(--bg-void);
+    border: 1px solid var(--border);
+    padding: 14px 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-time {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .game-matchup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .game-team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .game-team-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .game-team-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .game-vs {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    padding-left: 2px;
+  }
+  .game-odds {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+  .game-odds span { color: var(--cyan); }
+  @media (max-width: 900px) {
+    .games-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
   /* DRAFT ORDER WIDGET */
   .draft-widget {
     background: var(--bg-card);
@@ -577,6 +650,12 @@
   <div class="draft-widget">
     <div class="card-label">2026 Draft Order — Best record picks first · Worst record picks last</div>
     <div class="draft-grid" id="draft-order-grid"></div>
+  </div>
+
+  <!-- TODAY'S GAMES WIDGET -->
+  <div class="games-widget">
+    <div class="card-label">Today's World Cup Games</div>
+    <div class="games-grid" id="todays-games-grid"></div>
   </div>
 
   <!-- MAIN TOTAL SCORE CHART -->
@@ -777,19 +856,19 @@ const LEAGUE_DATA = {
     { "manager": "Charles", "country": "Scotland",    "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
     { "manager": "Fronge",  "country": "Morocco",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Fronge",  "country": "USA",         "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
-    { "manager": "Shaq",    "country": "France",      "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Shaq",    "country": "France",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  },
     { "manager": "Shaq",    "country": "Ivory Coast", "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
-    { "manager": "Dave",    "country": "Argentina",   "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Dave",    "country": "Argentina",   "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
     { "manager": "Dave",    "country": "Paraguay",    "pts": -250, "wins": 0, "losses": 1, "draws": 0, "gd": -3 },
     { "manager": "Jake",    "country": "Portugal",    "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
-    { "manager": "Jake",    "country": "Senegal",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Jake",    "country": "Senegal",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
     { "manager": "Brent",   "country": "Brazil",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Brent",   "country": "Croatia",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
     { "manager": "Mitchum", "country": "Germany",     "pts": 400,  "wins": 1, "losses": 0, "draws": 0, "gd": 6  },
     { "manager": "Mitchum", "country": "Sweden",      "pts": 300,  "wins": 1, "losses": 0, "draws": 0, "gd": 4  },
     { "manager": "Adam",    "country": "England",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
     { "manager": "Adam",    "country": "Canada",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Ryan",    "country": "Norway",      "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Ryan",    "country": "Norway",      "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
     { "manager": "Ryan",    "country": "Turkey",      "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
     { "manager": "Wes",     "country": "Netherlands", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Wes",     "country": "Switzerland", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
@@ -797,6 +876,12 @@ const LEAGUE_DATA = {
     { "manager": "Matt",    "country": "Japan",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Drew",    "country": "Colombia",    "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
     { "manager": "Drew",    "country": "Mexico",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  }
+  ],
+  "todaysGames": [
+    { "time": "1pm",  "home": "Portugal",    "away": "DR Congo",    "odds": "Portugal -380",  "homeManager": "Jake",  "awayManager": null },
+    { "time": "4pm",  "home": "England",     "away": "Croatia",     "odds": "England -140",   "homeManager": "Adam",  "awayManager": "Brent" },
+    { "time": "7pm",  "home": "Ghana",       "away": "Panama",      "odds": "Ghana +135",     "homeManager": null,    "awayManager": null },
+    { "time": "10pm", "home": "Uzbekistan",  "away": "Colombia",    "odds": "Colombia -270",  "homeManager": null,    "awayManager": "Drew" }
   ]
 };
 /* ============================================================
@@ -809,6 +894,8 @@ const LEAGUE_DATA = {
 const MANAGER_COLORS = LEAGUE_DATA.managerColors;
 const NCAA = LEAGUE_DATA.ncaa;
 let WC_DATA = LEAGUE_DATA.worldCup;
+
+const TODAY_GAMES = LEAGUE_DATA.todaysGames;
 
 const FLAGS = {
   'Spain': '🇪🇸', 'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Morocco': '🇲🇦', 'USA': '🇺🇸',
@@ -861,7 +948,33 @@ function renderOverview() {
   const totals = managers.map(m => totalScore(m)).sort((a,b) => b-a);
   const sortedManagers = [...managers].sort((a,b) => totalScore(b) - totalScore(a));
 
-  // Draft Order — best record picks first (pick 1), worst picks last (pick 12)
+  // Today's Games
+  const gamesGrid = document.getElementById('todays-games-grid');
+  if (gamesGrid) {
+    gamesGrid.innerHTML = '';
+    TODAY_GAMES.forEach(g => {
+      const homeBadge = g.homeManager
+        ? `<span class="game-team-badge" style="color:${MANAGER_COLORS[g.homeManager]};border-color:${MANAGER_COLORS[g.homeManager]}44">${g.homeManager}</span>` : '';
+      const awayBadge = g.awayManager
+        ? `<span class="game-team-badge" style="color:${MANAGER_COLORS[g.awayManager]};border-color:${MANAGER_COLORS[g.awayManager]}44">${g.awayManager}</span>` : '';
+      gamesGrid.innerHTML += `
+        <div class="game-card">
+          <div class="game-time">${g.time}</div>
+          <div class="game-matchup">
+            <div class="game-team">
+              <span class="game-team-name">${g.home}</span>
+              ${homeBadge}
+            </div>
+            <div class="game-vs">vs</div>
+            <div class="game-team">
+              <span class="game-team-name">${g.away}</span>
+              ${awayBadge}
+            </div>
+          </div>
+          <div class="game-odds">Odds: <span>${g.odds}</span></div>
+        </div>`;
+    });
+  }
   const draftOrder = [...sortedManagers]; // index 0 = pick 1 (best), index 11 = pick 12 (worst)
   const draftGrid = document.getElementById('draft-order-grid');
   if (draftGrid) {
