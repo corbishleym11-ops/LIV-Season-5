@@ -572,6 +572,20 @@
     color: var(--text-muted);
     letter-spacing: 0.5px;
   }
+  .mover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+  .mover-up   { color: var(--green); }
+  .mover-down { color: var(--red); }
+  .mover-same { color: var(--text-muted); font-size: 9px; }
   @media (max-width: 900px) {
     .draft-grid { grid-template-columns: repeat(6, 1fr); }
   }
@@ -709,24 +723,16 @@
     </div>
   </div>
 
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-label">Score Distribution</div>
-      <div class="chart-wrap" style="height:240px;">
-        <canvas id="chart-ncaa-polar"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-label">NCAA Leaderboard</div>
-      <table class="lb-table">
-        <thead>
-          <tr>
-            <th>#</th><th>Manager</th><th class="num">Score</th><th>Bar</th>
-          </tr>
-        </thead>
-        <tbody id="ncaa-lb-body"></tbody>
-      </table>
-    </div>
+  <div class="card">
+    <div class="card-label">NCAA Leaderboard</div>
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Manager</th><th class="num">Score</th><th>Bar</th>
+        </tr>
+      </thead>
+      <tbody id="ncaa-lb-body"></tbody>
+    </table>
   </div>
 </div>
 
@@ -823,6 +829,20 @@
    new valid JSON-compatible JS object in the same shape.
    ============================================================ */
 const LEAGUE_DATA = {
+  "previousRanks": {
+    "Mitchum": 1,
+    "Charles": 2,
+    "Dave":    3,
+    "Shaq":    4,
+    "Adam":    5,
+    "Fronge":  6,
+    "Ryan":    7,
+    "Drew":    8,
+    "Brent":   9,
+    "Matt":    10,
+    "Jake":    11,
+    "Wes":     12
+  },
   "managerColors": {
     "Charles": "#f0b429",
     "Dave":    "#00d4ff",
@@ -860,13 +880,13 @@ const LEAGUE_DATA = {
     { "manager": "Shaq",    "country": "Ivory Coast", "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
     { "manager": "Dave",    "country": "Argentina",   "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
     { "manager": "Dave",    "country": "Paraguay",    "pts": -250, "wins": 0, "losses": 1, "draws": 0, "gd": -3 },
-    { "manager": "Jake",    "country": "Portugal",    "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Jake",    "country": "Portugal",    "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Jake",    "country": "Senegal",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
     { "manager": "Brent",   "country": "Brazil",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Brent",   "country": "Croatia",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Brent",   "country": "Croatia",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
     { "manager": "Mitchum", "country": "Germany",     "pts": 400,  "wins": 1, "losses": 0, "draws": 0, "gd": 6  },
     { "manager": "Mitchum", "country": "Sweden",      "pts": 300,  "wins": 1, "losses": 0, "draws": 0, "gd": 4  },
-    { "manager": "Adam",    "country": "England",     "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Adam",    "country": "England",     "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  },
     { "manager": "Adam",    "country": "Canada",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Ryan",    "country": "Norway",      "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
     { "manager": "Ryan",    "country": "Turkey",      "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
@@ -874,14 +894,14 @@ const LEAGUE_DATA = {
     { "manager": "Wes",     "country": "Switzerland", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Matt",    "country": "Belgium",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
     { "manager": "Matt",    "country": "Japan",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Drew",    "country": "Colombia",    "pts": 0,    "wins": 0, "losses": 0, "draws": 0, "gd": 0  },
+    { "manager": "Drew",    "country": "Colombia",    "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  },
     { "manager": "Drew",    "country": "Mexico",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  }
   ],
   "todaysGames": [
-    { "time": "1pm",  "home": "Portugal",    "away": "DR Congo",    "odds": "Portugal -380",  "homeManager": "Jake",  "awayManager": null },
-    { "time": "4pm",  "home": "England",     "away": "Croatia",     "odds": "England -140",   "homeManager": "Adam",  "awayManager": "Brent" },
-    { "time": "7pm",  "home": "Ghana",       "away": "Panama",      "odds": "Ghana +135",     "homeManager": null,    "awayManager": null },
-    { "time": "10pm", "home": "Uzbekistan",  "away": "Colombia",    "odds": "Colombia -270",  "homeManager": null,    "awayManager": "Drew" }
+    { "time": "12pm", "home": "Czech Republic", "away": "South Africa",       "odds": "Czech -133",        "homeManager": null,    "awayManager": null },
+    { "time": "3pm",  "home": "Switzerland",    "away": "Bosnia & Herzegovina","odds": "Switzerland -188",  "homeManager": "Wes",   "awayManager": null },
+    { "time": "6pm",  "home": "Canada",         "away": "Qatar",              "odds": "Canada -370",       "homeManager": "Adam",  "awayManager": null },
+    { "time": "9pm",  "home": "Mexico",         "away": "South Korea",        "odds": "Mexico +100",       "homeManager": "Drew",  "awayManager": null }
   ]
 };
 /* ============================================================
@@ -892,6 +912,7 @@ const LEAGUE_DATA = {
 // DATA ACCESSORS (do not edit)
 // ============================
 const MANAGER_COLORS = LEAGUE_DATA.managerColors;
+const PREV_RANKS = LEAGUE_DATA.previousRanks;
 const NCAA = LEAGUE_DATA.ncaa;
 let WC_DATA = LEAGUE_DATA.worldCup;
 
@@ -982,11 +1003,22 @@ function renderOverview() {
     draftOrder.forEach((m, i) => {
       const pickNum = i + 1;
       const score = totalScore(m);
+      const prevRank = PREV_RANKS[m];
+      const moved = prevRank - pickNum; // positive = moved up, negative = moved down
+      let moverHTML = '';
+      if (moved > 0) {
+        moverHTML = `<div class="mover mover-up">▲ ${moved}</div>`;
+      } else if (moved < 0) {
+        moverHTML = `<div class="mover mover-down">▼ ${Math.abs(moved)}</div>`;
+      } else {
+        moverHTML = `<div class="mover mover-same">—</div>`;
+      }
       draftGrid.innerHTML += `
         <div class="draft-pick" style="--pick-color:${MANAGER_COLORS[m]}">
           <div class="draft-pick-num ${pickNum===1?'pick-1':''}">${pickNum}</div>
           <div class="draft-pick-name" style="color:${MANAGER_COLORS[m]}">${m}</div>
           <div class="draft-pick-score">${score > 0 ? score.toLocaleString() + ' pts' : '—'}</div>
+          ${moverHTML}
         </div>`;
     });
   }
@@ -1148,34 +1180,6 @@ function renderNCAA() {
         y: { grid: { color: '#1e2d3d' }, beginAtZero: true,
           ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
         }
-      }
-    }
-  });
-
-  destroyChart('ncaa-polar');
-  const ctx2 = document.getElementById('chart-ncaa-polar').getContext('2d');
-  chartInstances['ncaa-polar'] = new Chart(ctx2, {
-    type: 'polarArea',
-    data: {
-      labels: sorted.filter(n=>n.score>0).map(n=>n.manager),
-      datasets: [{
-        data: sorted.filter(n=>n.score>0).map(n=>n.score),
-        backgroundColor: sorted.filter(n=>n.score>0).map(n=>MANAGER_COLORS[n.manager]+'88'),
-        borderColor: sorted.filter(n=>n.score>0).map(n=>MANAGER_COLORS[n.manager]),
-        borderWidth: 1,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'right', labels: { boxWidth: 10, padding: 8, font: { size: 11 } } },
-        tooltip: {
-          backgroundColor: '#1a2330', borderColor: '#2a3f55', borderWidth:1,
-        }
-      },
-      scales: {
-        r: { grid: { color: '#1e2d3d' }, ticks: { display: false } }
       }
     }
   });
