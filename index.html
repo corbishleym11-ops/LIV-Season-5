@@ -22,9 +22,9 @@
     --green: #00e676;
     --green-dim: #0a3d1f;
     --red: #ff4757;
-    --text-primary: #e8edf2;
-    --text-secondary: #7a8fa8;
-    --text-muted: #3d5068;
+    --text-primary: #f0f4f8;
+    --text-secondary: #96adc4;
+    --text-muted: #4e6580;
     --font-display: 'Bebas Neue', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -672,24 +672,8 @@
     <div class="games-grid" id="todays-games-grid"></div>
   </div>
 
-  <!-- MAIN TOTAL SCORE CHART -->
-  <div class="grid-full card" style="margin-bottom:20px;">
-    <div class="card-label">Total Score — All Managers · Season 5</div>
-    <div class="chart-wrap" style="height:320px;">
-      <canvas id="chart-total"></canvas>
-    </div>
-  </div>
-
-  <!-- WC OVERVIEW CHART -->
-  <div class="grid-full card" style="margin-bottom:20px;">
-    <div class="card-label">World Cup · Manager Points (Live)</div>
-    <div class="chart-wrap" style="height:260px;">
-      <canvas id="chart-wc-overview"></canvas>
-    </div>
-  </div>
-
   <!-- LEADERBOARD -->
-  <div class="card">
+  <div class="card" style="margin-bottom:20px;">
     <div class="card-label">Full Standings</div>
     <table class="lb-table" id="lb-overview">
       <thead>
@@ -704,6 +688,22 @@
       </thead>
       <tbody id="lb-overview-body"></tbody>
     </table>
+  </div>
+
+  <!-- MAIN TOTAL SCORE CHART -->
+  <div class="grid-full card" style="margin-bottom:20px;">
+    <div class="card-label">Total Score — All Managers · Season 5</div>
+    <div class="chart-wrap" style="height:320px;">
+      <canvas id="chart-total"></canvas>
+    </div>
+  </div>
+
+  <!-- WC OVERVIEW CHART -->
+  <div class="grid-full card" style="margin-bottom:20px;">
+    <div class="card-label">World Cup · Manager Points (Live)</div>
+    <div class="chart-wrap" style="height:260px;">
+      <canvas id="chart-wc-overview"></canvas>
+    </div>
   </div>
 
 </div>
@@ -783,11 +783,12 @@
           <th>Country</th>
           <th>Manager</th>
           <th class="num">Pts</th>
+          <th class="num">GP</th>
           <th class="num">W</th>
           <th class="num">D</th>
           <th class="num">L</th>
           <th class="num">GD</th>
-          <th>Progress</th>
+          <th class="num">Group Rank</th>
         </tr>
       </thead>
       <tbody id="wc-detail-body"></tbody>
@@ -872,30 +873,30 @@ const LEAGUE_DATA = {
     { "manager": "Wes",     "score": 0    }
   ],
   "worldCup": [
-    { "manager": "Charles", "country": "Spain",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Charles", "country": "Scotland",    "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
-    { "manager": "Fronge",  "country": "Morocco",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Fronge",  "country": "USA",         "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
-    { "manager": "Shaq",    "country": "France",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  },
-    { "manager": "Shaq",    "country": "Ivory Coast", "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1  },
-    { "manager": "Dave",    "country": "Argentina",   "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
-    { "manager": "Dave",    "country": "Paraguay",    "pts": -250, "wins": 0, "losses": 1, "draws": 0, "gd": -3 },
-    { "manager": "Jake",    "country": "Portugal",    "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Jake",    "country": "Senegal",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
-    { "manager": "Brent",   "country": "Brazil",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Brent",   "country": "Croatia",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
-    { "manager": "Mitchum", "country": "Germany",     "pts": 400,  "wins": 1, "losses": 0, "draws": 0, "gd": 6  },
-    { "manager": "Mitchum", "country": "Sweden",      "pts": 300,  "wins": 1, "losses": 0, "draws": 0, "gd": 4  },
-    { "manager": "Adam",    "country": "England",     "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  },
-    { "manager": "Adam",    "country": "Canada",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Ryan",    "country": "Norway",      "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3  },
-    { "manager": "Ryan",    "country": "Turkey",      "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2 },
-    { "manager": "Wes",     "country": "Netherlands", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Wes",     "country": "Switzerland", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Matt",    "country": "Belgium",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Matt",    "country": "Japan",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0  },
-    { "manager": "Drew",    "country": "Colombia",    "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  },
-    { "manager": "Drew",    "country": "Mexico",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2  }
+    { "manager": "Charles", "country": "Spain",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 3 },
+    { "manager": "Charles", "country": "Scotland",    "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1,  "gp": 1, "groupRank": 1 },
+    { "manager": "Fronge",  "country": "Morocco",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 2 },
+    { "manager": "Fronge",  "country": "USA",         "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3,  "gp": 1, "groupRank": 1 },
+    { "manager": "Shaq",    "country": "France",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2,  "gp": 1, "groupRank": 2 },
+    { "manager": "Shaq",    "country": "Ivory Coast", "pts": 150,  "wins": 1, "losses": 0, "draws": 0, "gd": 1,  "gp": 1, "groupRank": 2 },
+    { "manager": "Dave",    "country": "Argentina",   "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3,  "gp": 1, "groupRank": 1 },
+    { "manager": "Dave",    "country": "Paraguay",    "pts": -250, "wins": 0, "losses": 1, "draws": 0, "gd": -3, "gp": 1, "groupRank": 4 },
+    { "manager": "Jake",    "country": "Portugal",    "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 2 },
+    { "manager": "Jake",    "country": "Senegal",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2, "gp": 1, "groupRank": 3 },
+    { "manager": "Brent",   "country": "Brazil",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 3 },
+    { "manager": "Brent",   "country": "Croatia",     "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2, "gp": 1, "groupRank": 4 },
+    { "manager": "Mitchum", "country": "Germany",     "pts": 400,  "wins": 1, "losses": 0, "draws": 0, "gd": 6,  "gp": 1, "groupRank": 1 },
+    { "manager": "Mitchum", "country": "Sweden",      "pts": 300,  "wins": 1, "losses": 0, "draws": 0, "gd": 4,  "gp": 1, "groupRank": 1 },
+    { "manager": "Adam",    "country": "England",     "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2,  "gp": 1, "groupRank": 1 },
+    { "manager": "Adam",    "country": "Canada",      "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 2 },
+    { "manager": "Ryan",    "country": "Norway",      "pts": 250,  "wins": 1, "losses": 0, "draws": 0, "gd": 3,  "gp": 1, "groupRank": 1 },
+    { "manager": "Ryan",    "country": "Turkey",      "pts": -200, "wins": 0, "losses": 1, "draws": 0, "gd": -2, "gp": 1, "groupRank": 3 },
+    { "manager": "Wes",     "country": "Netherlands", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 3 },
+    { "manager": "Wes",     "country": "Switzerland", "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 1 },
+    { "manager": "Matt",    "country": "Belgium",     "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 3 },
+    { "manager": "Matt",    "country": "Japan",       "pts": 50,   "wins": 0, "losses": 0, "draws": 1, "gd": 0,  "gp": 1, "groupRank": 2 },
+    { "manager": "Drew",    "country": "Colombia",    "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2,  "gp": 0, "groupRank": 3 },
+    { "manager": "Drew",    "country": "Mexico",      "pts": 200,  "wins": 1, "losses": 0, "draws": 0, "gd": 2,  "gp": 1, "groupRank": 1 }
   ],
   "todaysGames": [
     { "time": "12pm", "home": "Czech Republic", "away": "South Africa",       "odds": "Czech -133",        "homeManager": null,    "awayManager": null },
@@ -925,6 +926,8 @@ const FLAGS = {
   'Germany': '🇩🇪', 'Sweden': '🇸🇪', 'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Canada': '🇨🇦',
   'Norway': '🇳🇴', 'Turkey': '🇹🇷', 'Netherlands': '🇳🇱', 'Switzerland': '🇨🇭',
   'Belgium': '🇧🇪', 'Japan': '🇯🇵', 'Colombia': '🇨🇴', 'Mexico': '🇲🇽',
+  'Czech Republic': '🇨🇿', 'South Africa': '🇿🇦', 'Bosnia & Herzegovina': '🇧🇦',
+  'Qatar': '🇶🇦', 'South Korea': '🇰🇷',
 };
 
 
@@ -964,6 +967,13 @@ function makeGradient(ctx, color, alpha1=0.6, alpha2=0.0) {
 // ============================
 // RENDER OVERVIEW
 // ============================
+function pickNumColor(pick) {
+  if (pick === 1) return '#f0b429'; // gold
+  if (pick === 2) return '#c0c8d2'; // silver
+  if (pick === 3) return '#cd7f32'; // bronze
+  return '#4e6580'; // neutral muted
+}
+
 function renderOverview() {
   const managers = NCAA.map(n => n.manager);
   const totals = managers.map(m => totalScore(m)).sort((a,b) => b-a);
@@ -974,6 +984,8 @@ function renderOverview() {
   if (gamesGrid) {
     gamesGrid.innerHTML = '';
     TODAY_GAMES.forEach(g => {
+      const homeFlag = FLAGS[g.home] || '';
+      const awayFlag = FLAGS[g.away] || '';
       const homeBadge = g.homeManager
         ? `<span class="game-team-badge" style="color:${MANAGER_COLORS[g.homeManager]};border-color:${MANAGER_COLORS[g.homeManager]}44">${g.homeManager}</span>` : '';
       const awayBadge = g.awayManager
@@ -983,12 +995,12 @@ function renderOverview() {
           <div class="game-time">${g.time}</div>
           <div class="game-matchup">
             <div class="game-team">
-              <span class="game-team-name">${g.home}</span>
+              <span class="game-team-name">${homeFlag ? homeFlag + ' ' : ''}${g.home}</span>
               ${homeBadge}
             </div>
             <div class="game-vs">vs</div>
             <div class="game-team">
-              <span class="game-team-name">${g.away}</span>
+              <span class="game-team-name">${awayFlag ? awayFlag + ' ' : ''}${g.away}</span>
               ${awayBadge}
             </div>
           </div>
@@ -1004,7 +1016,7 @@ function renderOverview() {
       const pickNum = i + 1;
       const score = totalScore(m);
       const prevRank = PREV_RANKS[m];
-      const moved = prevRank - pickNum; // positive = moved up, negative = moved down
+      const moved = prevRank - pickNum;
       let moverHTML = '';
       if (moved > 0) {
         moverHTML = `<div class="mover mover-up">▲ ${moved}</div>`;
@@ -1013,11 +1025,17 @@ function renderOverview() {
       } else {
         moverHTML = `<div class="mover mover-same">—</div>`;
       }
+      const managerCountries = WC_DATA.filter(c => c.manager === m);
+      const flagsHTML = managerCountries.map(c => {
+        const flag = FLAGS[c.country] || '';
+        return flag ? `<span title="${c.country}" style="font-size:16px;line-height:1">${flag}</span>` : '';
+      }).join(' ');
       draftGrid.innerHTML += `
         <div class="draft-pick" style="--pick-color:${MANAGER_COLORS[m]}">
-          <div class="draft-pick-num ${pickNum===1?'pick-1':''}">${pickNum}</div>
+          <div class="draft-pick-num ${pickNum===1?'pick-1':''}" style="color:${pickNumColor(pickNum)}">${pickNum}</div>
           <div class="draft-pick-name" style="color:${MANAGER_COLORS[m]}">${m}</div>
           <div class="draft-pick-score">${score > 0 ? score.toLocaleString() + ' pts' : '—'}</div>
+          <div style="margin-top:5px;display:flex;gap:4px;justify-content:center">${flagsHTML}</div>
           ${moverHTML}
         </div>`;
     });
@@ -1359,25 +1377,24 @@ function updateWCTable() {
   const sorted = [...WC_DATA].sort((a,b)=>countryPoints(b)-countryPoints(a));
   const tbody = document.getElementById('wc-detail-body');
   tbody.innerHTML = '';
-  const maxPts = Math.max(...WC_DATA.map(c=>countryPoints(c)), 1);
   sorted.forEach((c, i) => {
     const pts = countryPoints(c);
-    const pct = (pts/maxPts*100).toFixed(0);
     const flag = FLAGS[c.country] || '🏳️';
     const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+    const grColor = c.groupRank === 1 ? 'var(--green)' : c.groupRank === 2 ? '#60a5fa' : c.groupRank === 3 ? 'var(--gold)' : c.groupRank === 4 ? 'var(--red)' : 'var(--text-muted)';
+    const grLabel = c.groupRank ? `${c.groupRank}${['st','nd','rd','th'][Math.min(c.groupRank-1,3)]}` : '—';
     tbody.innerHTML += `
       <tr>
         <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
         <td><span style="margin-right:6px">${flag}</span><strong>${c.country}</strong></td>
         <td><span style="color:${MANAGER_COLORS[c.manager]};font-weight:600">${c.manager}</span></td>
-        <td class="num ${pts?'score-val':'score-zero'}">${pts}</td>
+        <td class="num ${pts>0?'score-val':pts<0?'':'score-zero'}" style="${pts<0?'color:var(--red)':''}">${pts}</td>
+        <td class="num">${c.gp ?? '—'}</td>
         <td class="num">${c.wins}</td>
         <td class="num">${c.draws}</td>
         <td class="num">${c.losses}</td>
         <td class="num">${c.gd>0?'+':''}${c.gd}</td>
-        <td style="min-width:100px">
-          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${MANAGER_COLORS[c.manager]}44;border-right:2px solid ${MANAGER_COLORS[c.manager]}"></div></div>
-        </td>
+        <td class="num" style="color:${grColor};font-weight:600">${grLabel}</td>
       </tr>`;
   });
 }
